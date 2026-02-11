@@ -1,0 +1,7 @@
+{
+  "name": "Dost AI - Your Friendly Assistant",
+  "description": "A smart, friendly, and helpful AI assistant that understands English, Hindi, and Hinglish. Perfect for coding help, casual chats, and step-by-step explanations.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
