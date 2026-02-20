@@ -26,11 +26,22 @@ Language rules:
 `;
 
 export class GeminiService {
-  private ai: GoogleGenAI;
-  private chat: Chat;
+  private ai?: GoogleGenAI;
+  private chat?: Chat;
 
-  constructor() {
-    this.ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+  constructor() {}
+
+  private ensureChat(): Chat {
+    if (this.chat) return this.chat;
+
+    const apiKey = (process.env.GEMINI_API_KEY || process.env.API_KEY || '').trim();
+    if (!apiKey) {
+      throw new Error(
+        'Missing API key. Please set GEMINI_API_KEY in your environment variables.'
+      );
+    }
+
+    this.ai = new GoogleGenAI({ apiKey });
     this.chat = this.ai.chats.create({
       model: 'gemini-3-flash-preview',
       config: {
@@ -40,28 +51,31 @@ export class GeminiService {
         topK: 40,
       },
     });
+
+    return this.chat;
   }
 
   async *sendMessageStream(message: string) {
     try {
-      const responseStream = await this.chat.sendMessageStream({ message });
+      const chat = this.ensureChat();
+      const responseStream = await chat.sendMessageStream({ message });
       for await (const chunk of responseStream) {
         const response = chunk as GenerateContentResponse;
         yield response.text || '';
       }
     } catch (error) {
       console.error("Gemini Error:", error);
-      throw new Error("I hit a small bump! Can you try saying that again? (Mere side se kuch error aaya hai, please phir se try kijiye)");
+      const message =
+        error instanceof Error && error.message
+          ? error.message
+          : "I hit a small bump! Can you try saying that again? (Mere side se kuch error aaya hai, please phir se try kijiye)";
+      throw new Error(message);
     }
   }
 
   resetChat() {
-    this.chat = this.ai.chats.create({
-      model: 'gemini-3-flash-preview',
-      config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
-      },
-    });
+    this.chat = undefined;
+    this.ensureChat();
   }
 }
 
