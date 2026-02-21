@@ -36,7 +36,8 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
   return (
     <form 
       onSubmit={handleSubmit}
-      className="relative flex items-end gap-2 bg-white rounded-2xl shadow-xl shadow-indigo-100/50 border border-gray-100 p-2 md:p-3 transition-all focus-within:ring-2 focus-within:ring-indigo-100"
+      className="relative flex items-end gap-2 bg-theme rounded-2xl border border-gray-100 p-2 md:p-3 transition-all focus-within:ring-2 focus-within:ring-indigo-100"
+      style={{ boxShadow: '0 4px 24px 0 rgba(30, 41, 59, 0.5)' }}
     >
       <textarea
         ref={textareaRef}
@@ -46,13 +47,13 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
         onKeyDown={handleKeyDown}
         placeholder="Type a message (English, Hindi, Hinglish)..."
         disabled={disabled}
-        className="flex-1 bg-transparent border-none focus:ring-0 resize-none py-2 px-3 text-sm text-gray-800 placeholder:text-gray-400 max-h-[150px] custom-scrollbar"
+        className="flex-1 bg-transparent border-none focus:ring-0 resize-none py-2 px-3 text-sm text-inherit placeholder:text-gray-400 max-h-[150px] custom-scrollbar"
       />
       
       <div className="flex items-center gap-1 pr-1">
         <button
           type="button"
-          className="p-2 text-gray-400 hover:text-indigo-500 hover:bg-indigo-50 rounded-xl transition-colors hidden sm:flex"
+          className="p-2 text-inherit hover:text-indigo-500 hover:bg-indigo-50 rounded-xl transition-colors hidden sm:flex"
           title="Voice input (Coming soon)"
         >
           <Mic size={20} />
@@ -63,7 +64,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
           className={`p-2.5 rounded-xl transition-all ${
             text.trim() && !disabled
               ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200 hover:bg-indigo-700'
-              : 'bg-gray-100 text-gray-400'
+              : 'bg-theme text-inherit'
           }`}
         >
           <SendHorizontal size={20} />

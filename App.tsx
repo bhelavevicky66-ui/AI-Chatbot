@@ -1,5 +1,6 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import './theme.css';
 import { Message, Role } from './types';
 import { geminiService } from './services/gemini';
 import ChatMessage from './components/ChatMessage';
@@ -8,6 +9,16 @@ import Header from './components/Header';
 import { Trash2, MessageSquare } from 'lucide-react';
 
 const App: React.FC = () => {
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+
+  useEffect(() => {
+    document.body.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'welcome',
@@ -92,10 +103,20 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50 text-gray-900">
+    <div className="flex flex-col h-screen bg-theme">
       <Header />
+      {/* Theme Toggle Button */}
+      <div className="absolute top-4 left-8 z-50">
+        <button
+          onClick={toggleTheme}
+          className="p-2 bg-theme rounded-full shadow-md border border-gray-100 text-gray-500 hover:text-indigo-500 transition-colors"
+          title={theme === 'dark' ? 'Switch to Light (Ash) Mode' : 'Switch to Dark Mode'}
+        >
+          {theme === 'dark' ? '🌙' : '🌤️'}
+        </button>
+      </div>
 
-      <main className="flex-1 overflow-hidden relative max-w-4xl w-full mx-auto px-4 py-4 md:py-6">
+      <main className="flex-1 overflow-hidden relative max-w-4xl w-full mx-auto px-4 py-4 md:py-6 bg-theme">
         <div 
           ref={scrollRef}
           className="h-full overflow-y-auto custom-scrollbar space-y-6 pb-20 px-1"
@@ -134,7 +155,7 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      <div className="max-w-4xl w-full mx-auto px-4 pb-4 md:pb-8">
+      <div className="max-w-4xl w-full mx-auto px-4 pb-4 md:pb-8 bg-theme">
         <ChatInput onSend={handleSendMessage} disabled={isLoading} />
         <p className="text-[10px] text-center mt-3 text-gray-400">
           Dost AI can make mistakes. Please check important info.
