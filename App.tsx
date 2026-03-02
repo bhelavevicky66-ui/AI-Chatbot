@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import './theme.css';
-import { Message, Role } from './types';
+import { Message, Role, Language } from './types';
 import { geminiService } from './services/gemini';
 import ChatMessage from './components/ChatMessage';
 import ChatInput from './components/ChatInput';
@@ -10,6 +10,7 @@ import { Trash2, MessageSquare } from 'lucide-react';
 
 const App: React.FC = () => {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [selectedLanguage, setSelectedLanguage] = useState<Language>('hinglish');
 
   useEffect(() => {
     document.body.setAttribute('data-theme', theme);
@@ -65,7 +66,7 @@ const App: React.FC = () => {
 
     try {
       let fullContent = '';
-      const stream = geminiService.sendMessageStream(text);
+      const stream = geminiService.sendMessageStream(text, selectedLanguage);
       
       for await (const chunk of stream) {
         fullContent += chunk;
@@ -104,7 +105,7 @@ const App: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen bg-theme">
-      <Header />
+      <Header selectedLanguage={selectedLanguage} onLanguageChange={setSelectedLanguage} />
       {/* Theme Toggle Button */}
       <div className="absolute top-4 left-8 z-50">
         <button

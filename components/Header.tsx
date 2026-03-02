@@ -1,8 +1,14 @@
 
 import React from 'react';
-import { Sparkles, Languages } from 'lucide-react';
+import { Sparkles, Languages as LanguagesIcon } from 'lucide-react';
+import { LANGUAGES, Language } from '../types';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  selectedLanguage: Language;
+  onLanguageChange: (lang: Language) => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ selectedLanguage, onLanguageChange }) => {
   return (
     <header className="bg-theme border-b border-gray-100 sticky top-0 z-50">
       <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between bg-theme">
@@ -21,10 +27,20 @@ const Header: React.FC = () => {
           </div>
         </div>
         
-        <div className="hidden md:flex items-center gap-4 text-xs font-medium text-gray-500">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-theme rounded-full">
-            <Languages size={14} className="text-indigo-500" />
-            <span>EN / HI / Hinglish</span>
+        <div className="flex items-center gap-4 text-xs font-medium text-gray-500">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-theme rounded-full border border-gray-200">
+            <LanguagesIcon size={14} className="text-indigo-500" />
+            <select 
+              value={selectedLanguage}
+              onChange={(e) => onLanguageChange(e.target.value as Language)}
+              className="bg-transparent border-none outline-none text-xs font-medium text-gray-700 cursor-pointer"
+            >
+              {LANGUAGES.map((lang) => (
+                <option key={lang.code} value={lang.code}>
+                  {lang.name}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </div>

@@ -42,6 +42,7 @@ export default async function handler(req: Req, res: Res) {
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     const message = (body?.message ?? '').toString();
+    const language = (body?.language ?? 'hinglish').toString();
 
     if (!message.trim()) {
       res.status(400).json({ error: 'Missing message' });
@@ -52,7 +53,7 @@ export default async function handler(req: Req, res: Res) {
     const chat = ai.chats.create({
       model: 'gemini-3-flash-preview',
       config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
+        systemInstruction: SYSTEM_INSTRUCTION + `\n\nIMPORTANT: The user has explicitly selected the language code: "${language}". You MUST reply in this language ONLY. If the language is 'hinglish', mix Hindi and English naturally.`,
         temperature: 0.8,
         topP: 0.95,
         topK: 40,
